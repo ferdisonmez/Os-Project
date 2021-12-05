@@ -33,9 +33,6 @@ char * kWord[] = {
 	NULL
 	
 };
-
-
-
 void SauShell(){
         printf("\n\t============================================\n");
         printf("\t                   Saü Shell  \n");
@@ -44,14 +41,11 @@ void SauShell(){
         printf("\t============================================\n");
         printf("\n\n");
 }
-
-
 void controlCommand(char ** commandStr){
 
 	int flag=0;
 	int i=0;
 	while( kWord[i] != NULL ){
-
 		if( strcmp(commandStr[0],kWord[i] ) == 0 ){
 			flag =1;
 			break;
@@ -63,9 +57,7 @@ void controlCommand(char ** commandStr){
 		printf("Hata : Komut icra edilemiyor\n" );
 	}
 
-
 }
-
 void execute(char ** commandStr){
 	int pid;
 	pid = fork();
@@ -74,8 +66,6 @@ void execute(char ** commandStr){
 		printf("fork() olusturulamadi\n");
 		exit(-1);
 	}
-
-
 	if(pid == 0){
 			
 		controlCommand(commandStr);
@@ -89,55 +79,51 @@ void execute(char ** commandStr){
 			
 		waitpid(-1,NULL,0);	
 	}
-
-
 }
-
 char** parseLine(int *numberOfWord, char *line, char *argv[])
 {
-
    int i=0;
    *numberOfWord=0;
    const char space[2] = " ";
    char *word;
-   
 
    if(line[0]=='\0'){
         printf("Parametre Yok\n");
         return NULL;
    }
-   else{
-    
-   word = strtok(line, space);
-   
- 
-   argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
-   strcpy(argv[i],word);
+   else{   
+            word = strtok(line, space);
+            
+            argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
+            strcpy(argv[i],word);
 
-   i++;
-   *numberOfWord=i;
-   while(word!= NULL) {
-   
-      word = strtok(NULL, space);
-    
-      if(word==NULL){
-        break;
-      }
+            i++;
+            *numberOfWord=i;
+            while(word!= NULL) {
+            
+                word = strtok(NULL, space);
+                
+                if(word==NULL){
+                    break;
+                }
 
-      argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
-      strcpy(argv[i],word);
-           
-      i++;
-      *numberOfWord=i;
-      if(*numberOfWord>10){*numberOfWord=0; printf("Many parameter\n");return NULL;}
+                argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
+                strcpy(argv[i],word);
+                    
+                i++;
+                *numberOfWord=i;
+                if(*numberOfWord>10)
+                {
+                    *numberOfWord=0;
+                     printf("Çok Fazla Parametre Girildi\n");
+                    return NULL;
+                }
 
-   }  
+            }  
    }   
     
    return argv;
-
 }
-
 void PromptYazdir()
 {
     char* username = getenv("USER");
@@ -145,13 +131,12 @@ void PromptYazdir()
     gethostname(hostn, sizeof(hostn));
     printf(RED "%s@%s:"RESET BLU "%s > " RESET,username , hostn, getcwd(currentDirectory, 1024));
 }
-
 int main(int argc,char ** envp){
 	environ=envp;
 	SauShell();
 
-    char line[MAX_COMMAND_CH+1]; //Max numbers of character
-    char *argv[MAX_COMMAND_CH+1];  /* prompt argümanları/parametreleri     */
+    char line[MAX_COMMAND_CH+1];   //Maximum karakter sayısı
+    char *argv[MAX_COMMAND_CH+1];  //Argüman ve parametreler
 	char** myArgV=(char**)malloc(sizeof(char*)*1);
     myArgV[0]="\0";
     int wordNum=0;
@@ -181,9 +166,7 @@ int main(int argc,char ** envp){
 				}	
 			}
 			continue;
-			
 		}
-
 		execute(myArgV);
 
           for ( j = 0;j<wordNum; j++)
@@ -194,6 +177,5 @@ int main(int argc,char ** envp){
 	}//While End
     free(myArgV);
 	return 0;
-
 
 }
