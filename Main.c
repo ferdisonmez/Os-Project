@@ -92,18 +92,6 @@ void execute(char ** commandStr){
 
 
 }
-void  parse(char *line, char **argv)
-{
-     while (*line != '\0') {      
-          while (*line == ' ' || *line == '\t' || *line == '\n')
-               *line++ = '\0';     
-          *argv++ = line;          
-          while (*line != '\0' && *line != ' ' && 
-                 *line != '\t' && *line != '\n') 
-               line++;             
-     }
-     *argv = '\0';                 
-}
 
 char** parseLine(int *numberOfWord, char *line, char *argv[])
 {
@@ -150,14 +138,12 @@ char** parseLine(int *numberOfWord, char *line, char *argv[])
 
 }
 
-
-
 void PromptYazdir()
 {
     char* username = getenv("USER");
     char hostn[1204] = "";
     gethostname(hostn, sizeof(hostn));
-    printf(YEL "%s@%s:"RESET RED "%s > " RESET,username , hostn, getcwd(currentDirectory, 1024));
+    printf(RED "%s@%s:"RESET BLU "%s > " RESET,username , hostn, getcwd(currentDirectory, 1024));
 }
 
 int main(int argc,char ** envp){
@@ -166,7 +152,7 @@ int main(int argc,char ** envp){
 
     char line[MAX_COMMAND_CH+1]; //Max numbers of character
     char *argv[MAX_COMMAND_CH+1];  /* prompt argümanları/parametreleri     */
-	char** myArgV=(char**)malloc(sizeof(char*)*10);
+	char** myArgV=(char**)malloc(sizeof(char*)*1);
     myArgV[0]="\0";
     int wordNum=0;
     int j=0;
@@ -181,15 +167,11 @@ int main(int argc,char ** envp){
     }   
                   
     myArgV=parseLine(&wordNum,line,argv);
-    memset(line,'\0',MAX_COMMAND_CH*sizeof(char));
-
-       //   gets(line);             
-        //  parse(line, myArgV);      
+    memset(line,'\0',MAX_COMMAND_CH*sizeof(char));    
 		
-
 		if( strcmp(myArgV[0],kWord[0] ) == 0){
 			printf("exit\n" );
-			printf("(kabuk sonlanır)\n" );
+			printf("(Kabuk Sonlandı!!!)\n" );
 			exit(1);
 		}
 		else if(  strcmp(myArgV[0],kWord[1] ) == 0 ){
@@ -209,8 +191,8 @@ int main(int argc,char ** envp){
              free(myArgV[j]);
           }
         
-	}
-    
+	}//While End
+    free(myArgV);
 	return 0;
 
 
