@@ -7,24 +7,12 @@
 #include <sys/wait.h>
 #define MAX_COMMAND_CH 80
 #define MAX_COMMAND_WORD 10
-
-
-
-
-
 #define RED "\x1B[31m"
 #define YEL "\x1B[33m"
 #define RESET "\x1B[0m"
 
-
-
-
-
 static char* currentDirectory;
 extern char** environ;
-
-
-
 
 
 char * kWord[] = {
@@ -39,335 +27,167 @@ char * kWord[] = {
 "touch",
 NULL
 
-
-
 };
 
-
-
-
-
-
-
 void SauShell(){
-printf("\n\t============================================\n");
-printf("\t Saü Shell \n");
-printf("\t--------------------------------------------\n");
-printf("\t \n");
-printf("\t============================================\n");
-printf("\n\n");
+		printf("\n\t============================================\n");
+		printf("\t Saü Shell \n");
+		printf("\t--------------------------------------------\n");
+		printf("\t \n");
+		printf("\t============================================\n");
+		printf("\n\n");
 }
-
-
-
-
-
 
 void controlCommand(char ** commandStr){
 
-
-
-
-
 int flag=0;
 int i=0;
-while( kWord[i] != NULL ){
+	while( kWord[i] != NULL ){
 
+	if( strcmp(commandStr[0],kWord[i] ) == 0 ){
+		flag =1;
+		break;
+	}
+	i++;
+	}
 
-
-
-
-if( strcmp(commandStr[0],kWord[i] ) == 0 ){
-flag =1;
-break;
-}
-i++;
-}
-
-
-
-
-
-if(flag == 0){
-printf("Hata : Komut icra edilemiyor\n" );
-}
-
-
-
-
-
+	if(flag == 0){
+		printf("Hata : Komut icra edilemiyor\n" );
+	}
 
 }
-
-
-
-
 
 void execute(char ** commandStr){
-int pid;
-pid = fork();
+		int pid;
+		pid = fork();
+
+		if(pid < 0){
+			printf("fork() olusturulamadi\n");
+			exit(-1);
+		}
+
+		if(pid == 0){
+			controlCommand(commandStr);
+
+			if ( execvp(commandStr[0] , commandStr) == -1){
+				printf("execvp hatası olustu\n");
+				exit(0);
+			}
+		}
+		else{
 
 
 
-
-
-if(pid < 0){
-printf("fork() olusturulamadi\n");
-exit(-1);
-}
-
-
-
-
-
-
-if(pid == 0){
-
-
-
-controlCommand(commandStr);
-
-
-
-
-
-if ( execvp(commandStr[0] , commandStr) == -1){
-printf("execvp hatası olustu\n");
-exit(0);
-}
-}
-else{
-
-
-
-waitpid(-1,NULL,0);
-}
-
-
-
-
-
+		waitpid(-1,NULL,0);
+		}
 
 }
-
-
-
-
-
-
-void parse(char *line, char **argv)
-{
-while (*line != '\0') { /* if not the end of line ....... */
-while (*line != '\0') {
-while (*line == ' ' || *line == '\t' || *line == '\n')
-*line++ = '\0'; /* replace white spaces with 0 */
-*argv++ = line; /* save the argument position */
-*line++ = '\0';
-*argv++ = line;
-while (*line != '\0' && *line != ' ' &&
-*line != '\t' && *line != '\n')
-line++; /* skip the argument until ... */
-line++;
-}
-*argv = '\0'; /* mark the end of argument list */
-*argv = '\0';
-}
-}
-
-
-
-
 
 char** parseLine(char *line, char *argv[])
 {
-
-
-
-
 
 int i=0;
 int numberOfWord=0;
 const char space[2] = " ";
 char *word;
 
+	if(line[0]=='\0'){
+		printf("Parametre Yok\n");
+		argv[0]='\0';
+		return argv ;
+	}
+	else{
+
+	word = strtok(line, space);
+	argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
+	strcpy(argv[i],word);
+
+	i++;
+	numberOfWord=i;
+		while(word!= NULL) {
+
+			word = strtok(NULL, space);
+				if(word==NULL){
+					break;
+				}
+
+			argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
+			strcpy(argv[i],word);
+			i++;
+			numberOfWord=i;
 
 
 
 
-if(line[0]=='\0'){
-printf("Parametre Yok\n");
-argv[0]='\0';
-return argv ;
+					if(numberOfWord>MAX_COMMAND_CH){
+						printf("Many parameter\n");
+						return NULL;
+
+					}
+		}//While End
+
+	}
+	argv[i]=NULL;
+	return argv;
 }
-else{
-
-
-
-word = strtok(line, space);
-argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
-strcpy(argv[i],word);
-
-
-
-
-
-i++;
-numberOfWord=i;
-while(word!= NULL) {
-
-
-
-word = strtok(NULL, space);
-
-
-
-if(word==NULL){
-break;
-}
-
-
-
-
-
-argv[i]=(char *)malloc((MAX_COMMAND_CH+1)*sizeof(char));
-strcpy(argv[i],word);
-i++;
-numberOfWord=i;
-
-
-
-
-if(numberOfWord>MAX_COMMAND_CH){
-
-printf("Many parameter\n");
-return NULL;
-
-}
-
-
-
-
-
-}
-
-
-
-}
-
-
-
-argv[i]=NULL;
-return argv;
-
-
-
-
-
-}
-
-
-
-
 
 void PromptYazdir()
 {
-
-
-
-char* username =(char *)malloc(25*sizeof(char));
-memset(username, '\0', sizeof(username));
-cuserid(username);
-char hostn[1204] = "";
-gethostname(hostn, sizeof(hostn));
-printf(YEL "%s" RESET RED " %s@%s: " RESET,getcwd(currentDirectory, 1024),username , hostn);
+	char* username =(char *)malloc(25*sizeof(char));
+	memset(username, '\0', sizeof(username));
+	cuserid(username);
+	char hostn[1204] = "";
+	gethostname(hostn, sizeof(hostn));
+	printf(YEL "%s" RESET RED " %s@%s: " RESET,getcwd(currentDirectory, 1024),username , hostn);
 }
-
-
-
-
 
 int main(int argc,char ** envp){
-environ=envp;
-SauShell();
+	environ=envp;
+	SauShell();
 
+	char line[MAX_COMMAND_CH+1]; //Max numbers of character
+	char *argv[MAX_COMMAND_CH+1]; /* prompt argümanları/parametreleri */
+	char** myArgV=(char**)malloc(sizeof(char*)*10);
+	myArgV[0]='\0';
+	int j;
 
+	while(1){
+	PromptYazdir();
+	printf("sau > ");
+	if (fgets(line, sizeof(line), stdin)!=NULL) {
+		line[strcspn(line, "\n")] = '\0';
+	}
 
+	myArgV=parseLine(line,myArgV);
+	memset(line,'\0',MAX_COMMAND_CH+1*sizeof(char));
 
+	if(myArgV[0]==NULL){
+		continue;
+	}
 
-char line[MAX_COMMAND_CH+1]; //Max numbers of character
-char *argv[MAX_COMMAND_CH+1]; /* prompt argümanları/parametreleri */
-char** myArgV=(char**)malloc(sizeof(char*)*10);
-myArgV[0]='\0';
-int j;
+	if( strcmp(myArgV[0],kWord[0] ) == 0){
+			printf("exit\n" );
+			printf("(kabuk sonlanır)\n" );
+			exit(1);
+	}
+	else if( strcmp(myArgV[0],kWord[1] ) == 0 ){
+		if( myArgV[1] != NULL ){
+			if( chdir(myArgV[1]) < 0 ){
+				printf("cd komut hata verdi.\n");
+			}
+		}
+		continue;
+	}
 
+	execute(myArgV);
 
+	for ( j = 0; myArgV[j]!=NULL; j++)//Free splitting command array
+	{
+		free(myArgV[j]);
+	}
+}//While
 
-
-
-while(1){
-
-
-
-PromptYazdir();
-printf("sau > ");
-
-
-
-if (fgets(line, sizeof(line), stdin)!=NULL) {
-line[strcspn(line, "\n")] = '\0';
-}
-
-
-
-myArgV=parseLine(line,myArgV);
-memset(line,'\0',MAX_COMMAND_CH+1*sizeof(char));
-// parse(line,myArgV);
-perror("Geçti");
-if(myArgV[0]==NULL){
-continue;
-}
-
-
-
-if( strcmp(myArgV[0],kWord[0] ) == 0){
-printf("exit\n" );
-printf("(kabuk sonlanır)\n" );
-exit(1);
-}
-else if( strcmp(myArgV[0],kWord[1] ) == 0 ){
-if( myArgV[1] != NULL ){
-if( chdir(myArgV[1]) < 0 ){
-printf("cd komut hata verdi.\n");
-}
-}
-continue;
-}
-
-
-
-
-
-execute(myArgV);
-
-
-
-
-
-for ( j = 0; myArgV[j]!=NULL; j++)//Free splitting command array
-{
-free(myArgV[j]);
-}
-}
-
-
-
-
-
-free(myArgV);
-return 0;
-
-
-
-
+	free(myArgV);
+	return 0;
 
 }
