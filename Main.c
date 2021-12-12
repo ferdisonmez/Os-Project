@@ -15,7 +15,7 @@
 static char* currentDirectory;
 extern char** environ;
 
-
+/* Kullanicidan alinan komutlarin karsilasi icin kullanildi  */
 char * kWord[] = {
 "exit",
 "cd",
@@ -29,7 +29,7 @@ char * kWord[] = {
 NULL
 
 };
-
+/* Ekrana kullanicinin anlayabilmesi icin ekrana yazdirilir */
 void SauShell(){
 		printf("\n\t============================================\n");
 		printf("\t Saü Shell \n");
@@ -38,6 +38,7 @@ void SauShell(){
 		printf("\t============================================\n");
 		printf("\n\n");
 }
+/*  Kullanicidan alinan komutlarin çalıstirilabilmesi icin kontrol edilmistir     */
 
 int controlCommand(char ** commandStr){
 
@@ -59,7 +60,7 @@ int i=0;
 	return -0;
 
 }
-
+/* Kullanicidan alinan komutlarin icrasi için process fork islemi ile yaratilip execvp ile gerçeklestirilmistir    */
 int execute(char ** commandStr){
 		int pid;
 		pid = fork();
@@ -84,7 +85,7 @@ int execute(char ** commandStr){
 		}
 
 }
-
+/* Kullanicidan alinan string içerisinde parse işlemleri gerçekleştirilir     */
 char** parseLine(char *line, char *argv[])
 {
 
@@ -132,7 +133,7 @@ char *word;
 	argv[i]=NULL;
 	return argv;
 }
-
+/*  Hangi kullanici ve directory icerisinde oldugunu gosterir   */
 void PromptYazdir()
 {
 	char* username =(char *)malloc(25*sizeof(char));
@@ -147,7 +148,7 @@ int main(int argc,char ** envp){
 	environ=envp;
 	SauShell();
 
-	char line[MAX_COMMAND_CH+1]; //Max numbers of character
+	char line[MAX_COMMAND_CH+1]; 
 	char *argv[MAX_COMMAND_CH+1]; /* prompt argümanları/parametreleri */
 	char** myArgV=(char**)malloc(sizeof(char*)*MAX_COMMAND_WORD);
 	myArgV[0]='\0';
@@ -206,11 +207,11 @@ int main(int argc,char ** envp){
 
 	}
 
-	for ( j = 0; myArgV[j]!=NULL; j++)//Free splitting command array
+	for ( j = 0; myArgV[j]!=NULL; j++)//Yer ayrilan 2-D alanlar temizlendi
 	{
 		free(myArgV[j]);
 	}
-}//While
+}//While End
 
 	free(myArgV);
 	return 0;
