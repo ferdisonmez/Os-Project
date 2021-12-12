@@ -71,7 +71,6 @@ int execute(char ** commandStr){
 
 		if(pid == 0){
 			
-			printf("%d",(int)getpid());
 			if ( execvp(commandStr[0] , commandStr) == -1){
 				printf("execvp hatası olustu\n");
 				exit(0);
@@ -79,8 +78,6 @@ int execute(char ** commandStr){
 
 		}
 		else{
-
-
 
 			waitpid(-1,NULL,0);
 			return pid;
