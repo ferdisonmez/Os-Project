@@ -25,7 +25,7 @@ make
 ## Karşılaşılan Zorluklar
 - Terminalden alınan komutu parçalayan fonksiyonu programa eklerken birkaç zorluk yaşadık gerekli durumları kontrol edip bunları çözdük.
 - Terminalde kullanıcı adını gösterirken kullandığımız fonksiyonların NULL döndürme sorunuyla karşılaştık. 
-
+- Ubuntu sürümlerinin farklılığından kaynaklanan çeşitli uyum hatalarını detaylı araştırma sonucunda çözüme ulaştırdık.
 
 ## Projeyi geliştirirken kullanılan kaynaklar
 - https://man7.org/linux/man-pages/man2/fork.2.html
