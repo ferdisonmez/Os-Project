@@ -3,11 +3,11 @@
 İşletim Sistemleri Dersi Projesi
 
 ## Grup Üyeleri
-- Ferdi Sönmez
-- Berat Özdin
-- Soner Türkoğlu
-- Musa Karaş
-- Kamil Kaygısız
+- Ferdi Sönmez-b211210375
+- Berat Özdin-b211210377
+- Soner Türkoğlu-b211210371
+- Musa Karaş-b211210372
+- Kamil Kaygısız-b211210381
 
 ## Proje klasöründeki dosyalar
 - Main.c : Projenin ana dosyası tüm yazılan kodları içerir.
