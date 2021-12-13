@@ -34,3 +34,4 @@ make
 - https://linuxhint.com/fork-system-call-linux/
 - https://linux.die.net/man/3/getcwd
 - https://www.ysnonraydn.com/linux-bash-komutlari-ve-kullanimlari/
+- https://www.tutorialspoint.com/unix_system_calls/signal.htm
