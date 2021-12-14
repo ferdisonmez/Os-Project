@@ -1,4 +1,4 @@
-# Os-Project
+# Os-Project -GRUP 1
 
 İşletim Sistemleri Dersi Projesi
 
